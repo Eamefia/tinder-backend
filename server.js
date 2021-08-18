@@ -17,7 +17,7 @@ dotenv.config();
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) =>{
-      callback(null, "../build/public/uploads/");
+      callback(null, "../build/uploads/");
     },
     filename: (req, file, callback) =>{
       callback(null, file.originalname);
