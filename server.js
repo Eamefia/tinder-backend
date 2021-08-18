@@ -17,7 +17,7 @@ dotenv.config();
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) =>{
-      callback(null, "https://tinder-clon.netlify.app/build/uploads/");
+      callback(null, "https://tinder-clon.netlify.app/uploads/");
     },
     filename: (req, file, callback) =>{
       callback(null, file.originalname);
