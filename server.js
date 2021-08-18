@@ -17,7 +17,7 @@ dotenv.config();
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) =>{
-      callback(null, "../tinder-clone/public/uploads/");
+      callback(null, "../build/public/uploads/");
     },
     filename: (req, file, callback) =>{
       callback(null, file.originalname);
