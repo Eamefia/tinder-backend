@@ -39,7 +39,7 @@ const port = process.env.PORT || 8001;
 
 // Middlewares
 app.use(express.json());
-app.use(Cors({origin: "http://localhost:3000", credentials: true}));
+app.use(Cors({origin: ["http://localhost:3000", "https://tinder-clon.netlify.app"], credentials: true}));
 app.use(cookieParser());
 
 // DB config
@@ -140,6 +140,8 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
         res
           .cookie("token", token, {
             httpOnly: true,
+            secure: true,
+            sameSite: "none",
           })
           .send();
       } catch (err) {
@@ -193,6 +195,8 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
        res
           .cookie("token", token, {
             httpOnly: true,
+            secure: true,
+            sameSite: "none",
           })
           .send();
       } catch (err) {
@@ -206,6 +210,8 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
       res
         .cookie("token", "", {
           httpOnly: true,
+          secure: true,
+          sameSite: "none",
           expires: new Date(0),
         })
         .send();
