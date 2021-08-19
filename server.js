@@ -17,7 +17,7 @@ dotenv.config();
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) =>{
-      callback(null, "https://tinder-clon.netlify.app/uploads/");
+      callback(null, "../tinder-clone/public/uploads/");
     },
     filename: (req, file, callback) =>{
       callback(null, file.originalname);
@@ -130,10 +130,12 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
     
         const token = jwt.sign(
           {
-            user: savedUser.unique_id,
+            user: savedUser._id,
           },
           process.env.JWT_SECRET
         );
+        console.log(token);
+        
     
         // send the token in a HTTP-only cookie
     
@@ -185,7 +187,7 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
     
         const token = jwt.sign(
           {
-            user: existingUser.unique_id,
+            user: existingUser._id,
           },
           process.env.JWT_SECRET
         );
@@ -210,9 +212,9 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
       res
         .cookie("token", "", {
           httpOnly: true,
+          expires: new Date(0),
           secure: true,
           sameSite: "none",
-          expires: new Date(0),
         })
         .send();
     });
