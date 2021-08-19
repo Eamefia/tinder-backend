@@ -191,6 +191,8 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
       );
       
       // send the token in a HTTP-only cookie
+      console.log(token);
+      
       
      res
         .cookie("token", token, {
