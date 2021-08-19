@@ -191,7 +191,7 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
       );
       
       // send the token in a HTTP-only cookie
-      console.log(token);
+      
       
       
      res
@@ -234,6 +234,7 @@ app.get("/", (req, res) => res.status(200).send("Hello its working"));
       app.get("/getToken", (req, res) => {
         try {
           const token = req.cookies.token;
+          console.log(token);
           if (!token) return res.json(false);
       
           jwt.verify(token, process.env.JWT_SECRET);
