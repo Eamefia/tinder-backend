@@ -141,10 +141,16 @@ app.post('/messages/new', async (req, res)=>{
         }
     });
     }else{
-       await new Messages({
+        Messages.create({
         message,
         receiverId,
         senderId,
+      }, (err, data) => {
+        if(err){
+          res.status(500).send(err);
+         }else{
+          res.status(201).send(data);
+         }
       })
     }
   } catch (err) {
