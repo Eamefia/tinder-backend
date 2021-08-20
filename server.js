@@ -127,20 +127,19 @@ app.get('/userprofile/:userId', async (req, res) =>{
 app.post('/messages/new', async (req, res)=>{
 
   try {
+    const dbMessage = req.body;
     const senderId = req.body.senderId;
     const receiverId = req.body.receiverId;
     const message = req.body.message;
-    const username = req.body.username;
-    const profile = req.body.profile;
     const existingusername = await Messages.findOne({ receiverId });
     if (!existingusername) {
-       await new Messages({
-        message,
-        receiverId,
-        senderId,
-        username,
-        profile,
-      });
+      Messages.create(dbMessage, (err, data)=>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            res.status(201).send(data);
+        }
+    });
     }else{
        await new Messages({
         message,
