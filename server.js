@@ -17,11 +17,11 @@ dotenv.config();
 // app config
 
 const app = express();
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 8001;
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) =>{
-    callback(null, "../whatsapp-mern/public/uploads/");
+    callback(null, "../tinder-clone/public/uploads/");
   },
   filename: (req, file, callback) =>{
     callback(null, file.originalname);
@@ -124,16 +124,36 @@ app.get('/userprofile/:userId', async (req, res) =>{
 
 
 
-app.post('/messages/new', (req, res)=>{
-    const dbMessage = req.body;
+app.post('/messages/new', async (req, res)=>{
 
-    Messages.create(dbMessage, (err, data)=>{
-        if(err){
-            res.status(500).send(err);
-        }else{
-            res.status(201).send(data);
-        }
-    });
+  try {
+    const senderId = req.body.senderId;
+    const receiverId = req.body.receiverId;
+    const message = req.body.message;
+    const username = req.body.username;
+    const profile = req.body.profile;
+    const existingusername = await Messages.findOne({ receiverId });
+    if (!existingusername) {
+       await new Messages({
+        message,
+        receiverId,
+        senderId,
+        username,
+        profile,
+      });
+    }else{
+       await new Messages({
+        message,
+        receiverId,
+        senderId,
+      })
+    }
+  } catch (err) {
+    console.log(err);
+    
+  }
+
+
 });
 
  // Register user
@@ -209,7 +229,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
 
   app.get("/users/:uid", async (req, res) =>{
     try {
-      const user = await Signup.find({ _id: { $ne: req.params.uid}});
+      const user = await Signup.find({ _id: { $ne: req.params.uid }});
       res.status(200).json(user);
     } catch (err) {
       res.status(500).json(err);
@@ -267,9 +287,9 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       res
         .cookie("token", "", {
           httpOnly: true,
+          expires: new Date(0),secure: true,
           secure: true,
           sameSite: "none",
-          expires: new Date(0),
         })
         .send();
     });
@@ -297,6 +317,20 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
           res.json({ token });
         } catch (err) {
           res.json(false);
+        }
+      });
+
+
+      app.get('/chatUsers/:sender', async (req, res) => {
+        try {
+          const conversations = await Messages.find({ username: {$exists: true}, $or: [
+            {senderId: req.params.sender},
+            {receiverId: req.params.sender}
+          ]
+          });
+          res.status(200).json(conversations);
+        } catch (err) {
+          res.status(500).json(err);
         }
       });
 
