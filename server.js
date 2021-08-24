@@ -339,6 +339,34 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
         }
       });
 
+    app.get('/users/:userId', async (req, res) => {
+      try {
+        Signup.aggregate([
+          {$match: { _id : userId }},
+          {$lookup:{
+              from: 'messagecontents',
+              localField: '_id',
+              $or :[{foreignField: 'receiverId'}, {foreignField: 'senderId'}],
+              as : 'users'
+          }}
+          ])
+      .exec((err, result) = {
+        if (err) {
+          res.send(err)
+        },
+        if (result) {
+          res.send({
+            error: false,
+            data: result
+          })
+        }
+      })
+      } catch (error) {
+        console.log(error);
+        
+      }
+    })
+
 
 
 // listener
