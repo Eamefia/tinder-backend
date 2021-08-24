@@ -350,10 +350,10 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
               as : 'users'
           }}
           ])
-      .exec((err, result) = {
+      .exec((err, result) => {
         if (err) {
           res.send(err)
-        },
+        }
         if (result) {
           res.send({
             error: false,
