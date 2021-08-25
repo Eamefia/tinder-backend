@@ -341,7 +341,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     app.get('/usersdoc/:userId', async (req, res) => {
       try {
         Signup.aggregate([
-          {$match: req.params.userId},
+          {$match: {unique_id: req.params.userId}},
           {$lookup:{
               from: 'messagecontents',
               localField: 'unique_id',
