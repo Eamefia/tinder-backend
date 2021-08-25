@@ -237,7 +237,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
      // const user = await Signup.find({ _id: { $ne: req.params.uid }});
      // res.status(200).json(user);
    // } catch (err) {
-      res.status(500).json(err);
+      //res.status(500).json(err);
     //}
       
   //});
