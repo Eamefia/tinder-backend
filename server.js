@@ -212,7 +212,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: savedUser._id,
+            user: savedUser.unique_id,
           },
           process.env.JWT_SECRET
         );
@@ -232,15 +232,15 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       }
   });
 
-  app.get("/users/:uid", async (req, res) =>{
-    try {
-      const user = await Signup.find({ _id: { $ne: req.params.uid }});
-      res.status(200).json(user);
-    } catch (err) {
+  //app.get("/users/:uid", async (req, res) =>{
+   // try {
+     // const user = await Signup.find({ _id: { $ne: req.params.uid }});
+     // res.status(200).json(user);
+   // } catch (err) {
       res.status(500).json(err);
-    }
+    //}
       
-  });
+  //});
 
 
     //validate to login the user
@@ -267,7 +267,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: existingUser._id,
+            user: existingUser.unique_id,
           },
           process.env.JWT_SECRET
         );
@@ -342,6 +342,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     app.get('/users/:userId', async (req, res) => {
       try {
         Signup.aggregate([
+          {$match: req.params.userId},
           {$lookup:{
               from: 'messagecontents',
               localField: '_id',
