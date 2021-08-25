@@ -212,7 +212,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: savedUser._id,
+            user: savedUser.unique_id,
           },
           process.env.JWT_SECRET
         );
@@ -234,7 +234,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
 
   app.get("/users/:uid", async (req, res) =>{
      try {
-   const user = await Signup.find({ _id: { $ne: req.params.uid }});
+   const user = await Signup.find({ unique_id: { $ne: req.params.uid }});
    res.status(200).json(user);
    } catch (err) {
    res.status(500).json(err);
@@ -266,7 +266,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: existingUser._id,
+            user: existingUser.unique_id,
           },
           process.env.JWT_SECRET
         );
@@ -344,8 +344,8 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
           {$match: req.params.userId},
           {$lookup:{
               from: 'messagecontents',
-              localField: '_id',
-              foreignField: 'receiverId',
+              localField: 'unique_id',
+              foreignField: 'senderId',
               as : 'users'
           }}
           ])
