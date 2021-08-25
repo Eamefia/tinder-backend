@@ -212,7 +212,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: savedUser.unique_id,
+            user: savedUser._id,
           },
           process.env.JWT_SECRET
         );
@@ -267,7 +267,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const token = jwt.sign(
           {
-            user: existingUser.unique_id,
+            user: existingUser._id,
           },
           process.env.JWT_SECRET
         );
