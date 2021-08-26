@@ -350,19 +350,11 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
               localField: 'unique_id',
               foreignField: 'senderId',
               as : 'users'
-          }}
-          ]) 
-      .exec((err, result) => {
-        if (err) {
-          res.send(err)
-        }
-        if (result) {
-          res.send({
-            error: false,
-            data: result
+          }},
+          {$unwind: '$users'}
+          ]).then((result) => {
+            res.send(result)
           })
-        }
-      })
       } catch (error) {
         console.log(error); 
         
