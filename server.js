@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import multer from "multer";
+import { v4 as uuidv4 } from 'uuid';
 
 dotenv.config();
 
@@ -194,11 +195,13 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     
         const salt = await bcrypt.genSalt();
         const passwordhash = await bcrypt.hash(password, salt);
+        const unique_id = uuidv4();
 
     
         // save a new user account to the db
     
         const newUser = new Signup({
+          unique_id,
           fname,
           lname,
           email,
@@ -291,7 +294,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       res
         .cookie("token", "", {
           httpOnly: true,
-          expires: new Date(0),secure: true,
+          expires: new Date(0),
           secure: true,
           sameSite: "none",
         })
@@ -341,14 +344,14 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
     app.get('/usersdoc/:userId', async (req, res) => {
       try {
         Signup.aggregate([
-         // {$match: {unique_id: req.params.userId}},
+           {$match: {unique_id: req.params.userId}},
           {$lookup:{
               from: 'messagecontents',
               localField: 'unique_id',
-              foreignField: 'receiverId',
+              foreignField: 'senderId',
               as : 'users'
           }}
-          ])
+          ]) 
       .exec((err, result) => {
         if (err) {
           res.send(err)
@@ -361,7 +364,38 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
         }
       })
       } catch (error) {
-        console.log(error);
+        console.log(error); 
+        
+      }
+    });
+
+    app.get('/userdoc/:userId', async (rea, res) =>{
+      try {
+        Signup.aggregate( [
+          {
+             $lookup: {
+                from: "messagecontents",
+                localField: "unique_id",
+                foreignField: "receiverId",
+                let: { chat_user: "$unique_id" },
+                pipeline: [ {
+                   $match: {
+                      $expr: { $in: [ "$$chat_user", "$receiverId" ] }
+                   }
+                } ],
+                as: "matches"
+             }
+          }
+       ] ).exec((err, data) =>{
+         if (err) {
+           res.send(err)
+         }
+         if (data) {
+           res.send(data);
+         }
+       })
+      } catch (err) {
+        console.log(err);
         
       }
     })
