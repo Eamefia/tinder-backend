@@ -348,10 +348,9 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
           {$lookup:{
               from: 'messagecontents',
               localField: 'unique_id',
-              foreignField: 'senderId',
+              foreignField: 'receiverId',
               as : 'users'
           }},
-          {$unwind: '$users'}
           ]).exec((err, result) => {
             res.send({
               data: result
