@@ -352,8 +352,10 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
               as : 'users'
           }},
           {$unwind: '$users'}
-          ]).then((result) => {
-            res.send(result)
+          ]).exec((err, result) => {
+            res.send({
+              data: result
+            })
           })
       } catch (error) {
         console.log(error); 
