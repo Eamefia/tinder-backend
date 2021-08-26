@@ -361,7 +361,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       }
     });
 
-    app.get('/userdoc/:userId', async (rea, res) =>{
+    app.get('/userdoc/:userId', async (req, res) =>{
       try {
         Signup.aggregate( [
           {
