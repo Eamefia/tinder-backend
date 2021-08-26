@@ -341,7 +341,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
         }
       });
 
-    app.get('/usersdoc/:userId', async (req, res) => {
+    app.get('/userdoc/:userId', async (req, res) => {
       try {
         Signup.aggregate([
            // {$match: {unique_id: req.params.userId}},
@@ -352,9 +352,8 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
               as : 'users'
           }},
           ]).exec((err, result) => {
-            res.send({
-              data: result
-            })
+            res.send()
+            
           })
       } catch (error) {
         console.log(error); 
@@ -362,7 +361,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       }
     });
 
-    app.get('/userdoc/:userId', async (req, res) =>{
+    app.get('/usersdoc/:userId', async (req, res) =>{
       try {
         Signup.aggregate( [
           {
@@ -383,7 +382,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
          if (err) {
            res.send(err)
          }
-         if (data) {
+         if (result) {
            res.send({
              error: false,
              data: result
