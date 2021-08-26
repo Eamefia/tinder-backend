@@ -341,7 +341,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
         }
       });
 
-    app.get('/usersdoc/:userId', async (req, res) => {
+    app.get('/usersc/:userId', async (req, res) => {
       try {
         Signup.aggregate([
            // {$match: {unique_id: req.params.userId}},
@@ -363,7 +363,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
       }
     });
 
-    app.get('/userdoc/:userId', async (req, res) =>{
+    app.get('/usersdoc/:userId', async (req, res) =>{
       try {
         Signup.aggregate( [
           {
