@@ -377,7 +377,10 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
                 } ],
                 as: "matches"
              }
-          }
+          },
+          {
+            $unwind: "$matches",
+          },
        ] ).exec((err, result) =>{
          if (err) {
            res.send(err)
