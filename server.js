@@ -386,12 +386,15 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
                 as: "matches"
              }
           }
-       ] ).exec((err, data) =>{
+       ] ).exec((err, result) =>{
          if (err) {
            res.send(err)
          }
          if (data) {
-           res.send(data);
+           res.send({
+             error: false,
+             data: result
+           });
          }
        })
       } catch (err) {
