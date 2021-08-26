@@ -374,7 +374,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
                 let: { chat_user: "$unique_id" },
                 pipeline: [ {
                    $match: {
-                      $expr: { $in: [ "$$chat_user", "$receiverId" ] }
+                      $expr: { $in: [ "$$chat_user", "$senderId" ] }
                    }
                 } ],
                 as: "matches"
