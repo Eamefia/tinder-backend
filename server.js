@@ -100,6 +100,16 @@ app.get('/messages/:chatUserId', async (req, res) => {
   }
 });
 
+app.get('/messages', async (req, res) => {
+
+  try {
+    const chatmessages = await Messages.find();
+    res.status(200).json(chatmessages);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 app.get('/messages/:sender/:receiver', async (req, res) => {
   try {
     const conversations = await Messages.find({
