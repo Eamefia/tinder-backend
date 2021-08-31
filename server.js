@@ -138,13 +138,21 @@ app.get('/userprofile/:userId', async (req, res) =>{
 app.post('/messages/new', async (req, res)=>{
 
   try {
-    const dbMessage = req.body;
+    const uniqueId = uuidv4();
     const senderId = req.body.senderId;
     const receiverId = req.body.receiverId;
     const message = req.body.message;
-    const existingusername = await Messages.findOne({ receiverId });
+    const existingusername = await Messages.findOne({  $or: [
+      {senderId: senderId, receiverId: receiverId},
+      {senderId: receiverId, receiverId: senderId}
+    ]});
     if (!existingusername) {
-      Messages.create(dbMessage, (err, data)=>{
+      Messages.create( {
+        message,
+        receiverId,
+        senderId,
+        uniqueId
+      }, (err, data)=>{
         if(err){
             res.status(500).send(err);
         }else{
@@ -340,7 +348,7 @@ app.post('/signup/new', upload.single("profileImg"), async (req, res)=>{
 
       app.get('/chatUsers/:sender', async (req, res) => {
         try {
-          const conversations = await Messages.find({ username: {$exists: true}, $or: [
+          const conversations = await Messages.find({ uniqueId: {$exists: true}, $or: [
             {senderId: req.params.sender},
             {receiverId: req.params.sender}
           ]
